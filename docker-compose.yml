@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  db:
+    build: ./db
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: offbeat_dev
+    restart: always
+  backend:
+    build: ./backend
+    environment:
+     MYSQL_DATABASE: offbeat_dev
+     MYSQL_USER: root
+     MYSQL_PASSWORD: password
+     MYSQL_HOST: db
+    ports:
+      - "8888:8888"
+      - "3306:3306"
+    depends_on:
+      - db
+    restart: on-failure
