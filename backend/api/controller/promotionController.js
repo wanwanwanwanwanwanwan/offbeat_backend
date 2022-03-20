@@ -56,6 +56,7 @@ exports.findAll = async(req, res) => {
             id : req.body.promotionId,
             name: req.body.name,
             description: req.body.description,
+            category_id: req.body.categoryId,
         });
 
         return res.send(await Promotion.getAll(criteriaPromotion));
