@@ -16,6 +16,18 @@ exports.create = async(req,res) => {
     });
 
     try{
+        //parent category id must exist in current catgory if inputted
+        if(category.parentCatIdList){
+            const criteriaCategory = new Category({
+                id : category.parentCatIdList
+            });
+            let result = await Category.getAll(criteriaCategory);
+            if(!result || result.length<=0 ){
+                return res.status(400).send({
+                message: "no parent category id : " + category.parentCatIdList + " found"
+                });
+            }
+        }
         let categoryId = await Category.create(category);
         //return the inserted record to customer to confirm
         const criteriaCategory = new Category({
@@ -38,12 +50,10 @@ exports.findAll = async(req, res) => {
     try{
         //init category serach criteria with request body's info
         const criteriaCategory = new Category({
-            id : req.body.id,
+            id : req.body.categoryId,
             name: req.body.name
         });
 
-        let name = req.body.name;
-        let categoryId = req.body.categoryId;
         return res.send(await Category.getAll(criteriaCategory));
     }catch(err){
         return res.status(500).send({
