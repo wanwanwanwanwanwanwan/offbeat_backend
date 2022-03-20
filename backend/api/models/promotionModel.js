@@ -51,21 +51,15 @@ Promotion.getAll = async(criteriaPromotion)=>{
       queryPromotion += ` WHERE name LIKE '%${criteriaPromotion.name}%'`;
     }
   }
-  if(criteriaPromotion.promotionCategoryId){
+  if(criteriaPromotion.category_id){
     if(triggerCondition){
-      queryPromotion += ` AND name LIKE '%${criteriaPromotion.promotionCategoryId}%'`;
+      queryPromotion += ` AND category_id LIKE '%${criteriaPromotion.category_id}%'`;
     }else{
-      queryPromotion += ` WHERE name LIKE '%${criteriaPromotion.promotionCategoryId}%'`;
+      queryPromotion += ` WHERE category_id LIKE '%${criteriaPromotion.category_id}%'`;
     }
   }
 
-  if(criteriaPromotion.description){
-    if(triggerCondition){
-      queryPromotion += ` AND name LIKE '%${criteriaPromotion.description}%'`;
-    }else{
-      queryPromotion += ` WHERE name LIKE '%${criteriaPromotion.description}%'`;
-    }
-  }
+  
  
     try{
       let rawPromotionRecordList =  await SqlUtils.retrieveRecord(queryPromotion);
@@ -84,7 +78,6 @@ Promotion.getAll = async(criteriaPromotion)=>{
          }
          promotionInfoList[promotionInfoIndex].imageUrlList = imageUrlList;
         }
-        console.log("zz",promotionInfoList);
         return promotionInfoList;
 
     }catch (e){

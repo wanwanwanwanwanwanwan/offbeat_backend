@@ -1,6 +1,7 @@
 const req = require('express/lib/request');
 const Promotion = require('../models/promotionModel');
 const PromotionImage = require('../models/promotionImageModel');
+const Category = require('../models/promotionCategoryModel');
 
 //create promotion
 exports.create = async(req,res) => {
@@ -19,6 +20,19 @@ exports.create = async(req,res) => {
     });
     
     try{
+        //category id must exist in current catgory if inputted
+        if(promotion.category_id){
+            const criteriaCategory = new Category({
+                id : promotion.category_id
+            });
+            let result = await Category.getAll(criteriaCategory);
+            if(!result || result.length<=0 ){
+                return res.status(400).send({
+                message: "no cataegory id : " + promotion.category_id + " found"
+                });
+            }
+        }
+        
         let promotionId = await Promotion.create(promotion);
         
         //return the inserted record to customer to confirm
@@ -42,7 +56,6 @@ exports.findAll = async(req, res) => {
             id : req.body.promotionId,
             name: req.body.name,
             description: req.body.description,
-            promotionCategoryId: req.body.cateogryId
         });
 
         return res.send(await Promotion.getAll(criteriaPromotion));
